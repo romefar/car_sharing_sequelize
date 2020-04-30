@@ -1,8 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Run = sequelize.define('run', {
     startDate: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
+      type: DataTypes.DATE
     },
     endDate: {
       type: DataTypes.DATE
