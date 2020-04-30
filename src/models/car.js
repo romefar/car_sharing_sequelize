@@ -62,6 +62,10 @@ module.exports = (sequelize, DataTypes) => {
         isAfter: {
           args: ['2010-01-01'], // YYYY-MM-DD ISO 8601
           msg: 'The car cannot be older than 10 years.'
+        },
+        isBefore: {
+          args: [new Date().toJSON().slice(0, 10)],
+          msg: 'The car cannot be produced today.'
         }
       }
     },
@@ -109,11 +113,11 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     geoLatitude: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.FLOAT(),
       allowNull: false
     },
     geoLongtitude: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.FLOAT(),
       allowNull: false
     },
     useCounter: {
@@ -137,7 +141,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     }
-    // TODO: add hook for checking fuel capacity and mielage
   })
   return Car
 }
