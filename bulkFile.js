@@ -8,7 +8,7 @@ const createTestData = async (car, creditCard, driver, run, booking) => {
     status: 'Free',
     fuelCapacity: 60,
     fuelLevel: 60,
-    mileage: 10000,
+    mileage: 145000,
     geoLatitude: -121.5657546456,
     geoLongtitude: -121.5657546456
   })
@@ -24,18 +24,9 @@ const createTestData = async (car, creditCard, driver, run, booking) => {
     lastName: 'Smith',
     creditCardId: 1
   })
-  await run.create({
-    startFuelLevel: 20,
-    startMileage: 10000,
-    driverId: 1
-  })
   await booking.create({
-    runId: 1,
     carId: 1
-  })
-  const book = await booking.findByPk(1)
-  book.finishFuelLevel = 40
-  await book.save()
+  }, { driverId: 1 })
 }
 
 module.exports = createTestData
