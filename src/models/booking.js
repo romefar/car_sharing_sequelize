@@ -20,10 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     hooks: {
-      async beforeCreate (instance) {
+      async beforeCreate (instance, { driverId }) {
         const {
           dataValues: { carId },
-          sequelize: { models: { car: carModel } }
+          sequelize: { models: { car: carModel, run: runModel } }
         } = instance
 
         const car = await carModel.findByPk(carId)
@@ -52,10 +52,19 @@ module.exports = (sequelize, DataTypes) => {
 
         car.status = 'Reserved'
         await car.save()
+
+        const run = await runModel.create({
+          startFuelLevel: car.fuelLevel,
+          startMileage: car.mileage,
+          driverId
+        })
+        instance.runId = run.id
+        await run.save()
+
       },
 
       // we will recieve clientId and carId from the client
-      async beforeUpdate (instance, options) {
+      async beforeUpdate (instance) {
         const {
           dataValues: { finishFuelLevel, finishMileage, carId, status },
           sequelize: { models: { car: carModel, run: runModel } }
@@ -64,16 +73,10 @@ module.exports = (sequelize, DataTypes) => {
         const car = await carModel.findByPk(carId)
 
         if (status === 'Active') {
-          const { driverId } = options
-          const run = await runModel.create({
-            startFuelLevel: car.fuelLevel,
-            startMileage: car.mileage,
-            driverId
+          const run = await runModel.update({
+            startDate: DataTypes.NOW
           })
-          const runId = run.id
           await run.save()
-
-          instance.runId = runId
 
           car.status = 'In use'
           await car.save()
