@@ -2,41 +2,25 @@ const http = require('http')
 const chalk = require('chalk')
 require('dotenv').config()
 
+const responseUtil = require('./src/utils/resposeUtil')
+const { carsRoute, driversRoute } = require('./src/routes')
 const { car, creditCard, driver, run, booking, sequelize: db } = require('./src/models')
 const createTestData = require('./bulkFile')
-const carsList = require('./src/routes/carsList')
-const carsReserved = require('./src/routes/carsReserved')
-const createCar = require('./src/routes/createCar')
-const carsService = require('./src/routes/carsService')
-const carsRelocate = require('./src/routes/carsRelocate')
-const carsRemove = require('./src/routes/carsRemove')
 
 db.sync({ force: true }).then(async () => {
   await createTestData(car, creditCard, driver, run, booking)
   const server = http.createServer(async (req, res) => {
     try {
-      const { url: reqUrl, method } = req
+      const { url: reqUrl } = req
       const { pathname, searchParams } = new URL(reqUrl, process.env.DEV_HOST)
-      console.log(pathname, method)
-      if (pathname === '/cars' && method === 'GET') {
-        carsList(req, res, car, searchParams)
-      } else if (pathname === '/cars/reserved/unauthorized' && method === 'GET') {
-        carsReserved(req, res)
-      } else if (pathname === '/cars' && method === 'POST') {
-        createCar(req, res)
-      } else if (pathname === '/cars/service' && method === 'PUT') {
-        carsService(req, res)
-      } else if (pathname === '/cars/relocate' && method === 'PUT') {
-        carsRelocate(req, res)
-      } else if (pathname === '/cars' && method === 'DELETE') {
-        carsRemove(req, res)
+      const route = pathname.split('/')
+
+      if (route.includes('cars')) {
+        carsRoute(res, req, pathname, searchParams)
+      } else if (route.includes('drivers')) {
+        driversRoute(res, req, pathname)
       } else {
-        res.writeHead(404, { 'Content-type': 'application/json' })
-        res.write(JSON.stringify({
-          status: 404,
-          message: 'The requested URL was not found on the server.'
-        }))
-        res.end()
+        responseUtil(res, 404, 'The requested URL was not found on the server.', true)
       }
     } catch (error) {
       console.log(chalk.red(error))
