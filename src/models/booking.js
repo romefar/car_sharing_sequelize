@@ -60,7 +60,6 @@ module.exports = (sequelize, DataTypes) => {
         })
         instance.runId = run.id
         await run.save()
-
       },
 
       // we will recieve clientId and carId from the client
