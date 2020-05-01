@@ -113,12 +113,24 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     geoLatitude: {
-      type: DataTypes.FLOAT(),
-      allowNull: false
+      type: DataTypes.FLOAT(8, 5),
+      allowNull: false,
+      validate: {
+        is: {
+          args: [/^(-?\d{1,3}(\.?\d{5})?)$/g],
+          msg: 'Invalid latitude value. Max latitude accuracy is 5.'
+        }
+      }
     },
     geoLongtitude: {
-      type: DataTypes.FLOAT(),
-      allowNull: false
+      type: DataTypes.FLOAT(8, 5),
+      allowNull: false,
+      validate: {
+        is: {
+          args: [/^(-?\d{1,3}(\.?\d{5})?)$/g],
+          msg: 'Invalid longtitude value. Max longtitude accuracy is 5.'
+        }
+      }
     },
     useCounter: {
       type: DataTypes.INTEGER,
