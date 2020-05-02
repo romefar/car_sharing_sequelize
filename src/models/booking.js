@@ -1,8 +1,16 @@
+const { Op } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   const Booking = sequelize.define('booking', {
     status: {
       type: DataTypes.ENUM('Booked', 'Active', 'Closed', 'Cancelled'),
-      defaultValue: 'Booked'
+      defaultValue: 'Booked',
+      validate: {
+        [Op.in]: {
+          args: ['Booked', 'Active', 'Closed', 'Cancelled'],
+          msg: 'Invalid booking status.'
+        }
+      }
     },
     finishFuelLevel: {
       type: DataTypes.INTEGER,
@@ -23,10 +31,32 @@ module.exports = (sequelize, DataTypes) => {
       async beforeCreate (instance, { driverId }) {
         const {
           dataValues: { carId },
-          sequelize: { models: { car: carModel, run: runModel } }
+          sequelize: { models: { car: carModel, run: runModel, driver: driverModel, creditCard } }
         } = instance
 
+        const driverCardData = await driverModel.findOne({
+          where: {
+            id: driverId
+          },
+          attributes: [],
+          include: {
+            model: creditCard,
+            attributes: ['cardValidDate', 'isAuthorized']
+          }
+        })
+        if (driverCardData === null) throw new Error('A driver wasn\'t found.')
+        const driverHasCar = await runModel.findOne({
+          where: {
+            driverId
+          }
+        })
+        if (driverHasCar !== null) throw new Error('A driver has a car in use.')
+        const { creditCard: { cardValidDate } } = JSON.parse(JSON.stringify(driverCardData))
+
+        if (cardValidDate <= new Date().toJSON().slice(0, 10)) throw new Error('Cannot book a car with an expired card.')
+
         const car = await carModel.findByPk(carId)
+        if (car === null) throw new Error('Car wasn\'t found.')
 
         let msg
         switch (car.status) {
@@ -68,13 +98,16 @@ module.exports = (sequelize, DataTypes) => {
           dataValues: { finishFuelLevel, finishMileage, carId, status },
           sequelize: { models: { car: carModel, run: runModel } }
         } = instance
+        const availableStatus = ['Booked', 'Active', 'Closed', 'Cancelled']
+        if (!availableStatus.includes(status)) throw new Error('Invalid booking status.')
 
         const car = await carModel.findByPk(carId)
 
         if (status === 'Active') {
-          const run = await runModel.update({
-            startDate: DataTypes.NOW
-          })
+          const editStatus = await checkStatus(runModel, instance.runId)
+          if (editStatus) throw new Error('Cannot change status of a closed / canceled booking.')
+          const run = await runModel.findByPk(instance.runId)
+          run.startDate = sequelize.fn('NOW')
           await run.save()
 
           car.status = 'In use'
@@ -84,6 +117,8 @@ module.exports = (sequelize, DataTypes) => {
         if (status === 'Closed') {
           const { dataValues: { runId } } = instance
           const { fuelCapacity, mileage } = car
+          const editStatus = await checkStatus(runModel, runId)
+          if (editStatus) throw new Error('Cannot change status of a closed / canceled booking.')
 
           if (finishFuelLevel === 0 || finishMileage === 0) {
             throw new Error('Finish fuel level or finish mileage cannot be equal 0')
@@ -94,7 +129,7 @@ module.exports = (sequelize, DataTypes) => {
           }
 
           const run = await runModel.findByPk(runId)
-          run.endDate = DataTypes.NOW
+          run.endDate = sequelize.fn('NOW')
           await run.save()
 
           await car.increment('useCounter', { by: 1 })
@@ -102,19 +137,17 @@ module.exports = (sequelize, DataTypes) => {
           car.mileage = finishMileage
           car.fuelLevel = finishFuelLevel
           // TODO: Remove random geo coordinates for prod version
-          car.geoLongtitude = (Math.random() * 360 - 180).toFixed(7)
-          car.geoLatitude = (Math.random() * 180 - 90).toFixed(7)
+          car.geoLongtitude = (Math.random() * 360 - 180).toFixed(5)
+          car.geoLatitude = (Math.random() * 180 - 90).toFixed(5)
           await car.save()
         }
 
         if (status === 'Cancelled') {
+          const editStatus = await checkStatus(runModel, instance.runId)
+          if (editStatus) throw new Error('Cannot change status of a closed / canceled booking.')
           await car.increment('useCounter', { by: 1 })
           car.status = 'Free'
           await car.save()
-        }
-
-        if (status === 'Closed' || status === 'Cancelled') {
-          throw new Error('Cannot chanhe closed bookings.')
         }
       }
     }
@@ -126,4 +159,11 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   return Booking
+}
+
+const checkStatus = async (model, id) => {
+  const checkRun = await model.findOne({ where: { id }, attributes: ['endDate'] })
+  const { endDate } = JSON.parse(JSON.stringify(checkRun))
+  console.log(!!endDate)
+  return endDate
 }
