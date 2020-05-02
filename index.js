@@ -3,7 +3,7 @@ const chalk = require('chalk')
 require('dotenv').config()
 
 const responseUtil = require('./src/utils/resposeUtil')
-const { carsRoute, driversRoute } = require('./src/routes')
+const { carsRoute, driversRoute, bookingRoute } = require('./src/routes')
 const { car, creditCard, driver, run, booking, sequelize: db } = require('./src/models')
 const createTestData = require('./bulkFile')
 
@@ -19,6 +19,8 @@ db.sync({ force: true }).then(async () => {
         carsRoute(res, req, pathname, searchParams)
       } else if (route.includes('drivers')) {
         driversRoute(res, req, pathname)
+      } else if (route.includes('booking')) {
+        bookingRoute(res, req, pathname)
       } else {
         responseUtil(res, 404, 'The requested URL was not found on the server.', true)
       }
