@@ -11,17 +11,17 @@ const {
 const carsRoute = (res, req, pathname, searchParams) => {
   const { method } = req
 
-  if (pathname === '/cars' && method === 'GET') {
+  if (pathname === '/api/v1/cars' && method === 'GET') {
     carsList(res, searchParams)
-  } else if (pathname === '/cars/reserved/unauthorized' && method === 'GET') {
+  } else if (pathname === '/api/v1/cars/reserved/unauthorized' && method === 'GET') {
     carsReserved(res)
-  } else if (pathname === '/cars' && method === 'POST') {
+  } else if (pathname === '/api/v1/cars' && method === 'POST') {
     createCar(req, res)
-  } else if (pathname === '/cars/service' && method === 'PUT') {
+  } else if (pathname === '/api/v1/cars/service' && method === 'PUT') {
     carsService(res)
-  } else if (pathname === '/cars/relocate' && method === 'PUT') {
+  } else if (pathname === '/api/v1/cars/relocate' && method === 'PUT') {
     carsRelocate(res)
-  } else if (pathname === '/cars' && method === 'DELETE') {
+  } else if (pathname === '/api/v1/cars' && method === 'DELETE') {
     carsRemove(req, res)
   } else {
     responseUtil(res, 404, 'The requested URL was not found on the server.', true)

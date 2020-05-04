@@ -164,6 +164,5 @@ module.exports = (sequelize, DataTypes) => {
 const checkStatus = async (model, id) => {
   const checkRun = await model.findOne({ where: { id }, attributes: ['endDate'] })
   const { endDate } = JSON.parse(JSON.stringify(checkRun))
-  console.log(!!endDate)
   return endDate
 }
