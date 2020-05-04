@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isAfter: {
-          args: ['2010-01-01'], // YYYY-MM-DD ISO 8601
+          args: [`${new Date().getFullYear() - 10}-01-01`], // YYYY-MM-DD ISO 8601
           msg: 'The car cannot be older than 10 years.'
         },
         isBefore: {
@@ -79,7 +79,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         min: {
           args: [0],
-          msg: 'Fuel capacity cannot be a negative number.'
+          msg: 'Fuel capacity cannot be a negative number or 0.'
         },
         isInt: {
           msg: 'Fuel capacity must be an integer.'
@@ -92,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         min: {
           args: [0],
-          msg: 'Fuel level cannot be a negative number.'
+          msg: 'Fuel level cannot be a negative number or 0.'
         },
         isInt: {
           msg: 'Fuel level must be an integer.'
@@ -105,7 +105,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         min: {
           args: [0],
-          msg: 'Mileage cannot be a negative number.'
+          msg: 'Mileage cannot be a negative number or 0.'
         },
         isInt: {
           msg: 'Mileage must be an integer.'
@@ -138,7 +138,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         min: {
           args: [0],
-          msg: 'Use counter cannot be a negative number.'
+          msg: 'Use counter cannot be a negative number or 0.'
         },
         isInt: {
           msg: 'Use couter must be an integer.'

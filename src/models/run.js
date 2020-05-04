@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         min: {
           args: [0],
-          msg: 'Start fuel level cannot be a negative number.'
+          msg: 'Start fuel level cannot be a negative number or 0.'
         },
         isInt: {
           msg: 'Start fuel level must be an integer.'
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         min: {
           args: [0],
-          msg: 'Start mileage cannot be a negative number.'
+          msg: 'Start mileage cannot be a negative number or 0.'
         },
         isInt: {
           msg: 'Start mileage must be an integer.'
