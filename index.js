@@ -12,7 +12,7 @@ db.sync({ force: true }).then(async () => {
   const server = http.createServer(async (req, res) => {
     try {
       const { url: reqUrl } = req
-      const { pathname, searchParams } = new URL(reqUrl, process.env.DEV_HOST || process.env.DB_HOSTNAME)
+      const { pathname, searchParams } = new URL(reqUrl, process.env.DEV_HOST || req.headers.host)
       const route = pathname.split('/')
 
       if (route.includes('cars')) {
