@@ -4,6 +4,7 @@
   "description": "A simple car-sharing service.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "repository": {
