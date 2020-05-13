@@ -1,6 +1,6 @@
 const http = require('http')
 const chalk = require('chalk')
-require('dotenv').config()
+require('dotenv/config')
 
 const responseUtil = require('./src/utils/resposeUtil')
 const { carsRoute, driversRoute, bookingRoute } = require('./src/routes')
