@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Each character in the VIN must be either a letter from the alphabet or a number from 0 through 9.'
         },
         isVin (value) {
-          if (value.length !== 17 || !value.match(/[A-HJ-NPR-Z0-9]{13}[0-9]{4}/g)) {
+          if (value.length !== 17 || !value.match(/[A-HJ-NPR-Z0-9]{13}[0-9]{4}/)) {
             throw new Error('Invalid VIN.')
           }
         }
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Invalid EU vehicle registration number. The number length must be between 5 and 9'
         },
         is: {
-          args: [/^[A-Z0-9-]+$/g],
+          args: [/^[A-Z0-9-]+$/],
           msg: 'The registration number can only contain letters, numbers and hyphen characters.'
         }
       }
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Empty brand name is not allowed.'
         },
         is: {
-          args: [/^[a-zA-Z-]+$/g],
+          args: [/^[a-zA-Z-]+$/],
           msg: 'The brand name can only contain letters and hyphen characters.'
         }
       }
@@ -117,7 +117,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         is: {
-          args: [/^(-?\d{1,3}(\.?\d{5})?)$/g],
+          args: [/^(-?\d{1,3}(\.?\d{5})?)$/],
           msg: 'Invalid latitude value. Max latitude accuracy is 5.'
         }
       }
@@ -127,7 +127,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         is: {
-          args: [/^(-?\d{1,3}(\.?\d{5})?)$/g],
+          args: [/^(-?\d{1,3}(\.?\d{5})?)$/],
           msg: 'Invalid longtitude value. Max longtitude accuracy is 5.'
         }
       }

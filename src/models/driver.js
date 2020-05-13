@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
         is: {
-          args: [/^[0-9A-Z-]+$/g],
+          args: [/^[0-9A-Z-]+$/],
           msg: 'The driver license can only contain letters, numbers and hyphen characters.'
         }
       }
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Empty first name is not allowed.'
         },
         is: {
-          args: [/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/g],
+          args: [/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/],
           msg: 'First name can only contain the following characters: a-z, A-Z, \', hyphen and space.'
         }
       }
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Empty last name is not allowed.'
         },
         is: {
-          args: [/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/g],
+          args: [/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/],
           msg: 'Last name can only contain the following characters: a-z, A-Z, \', hyphen and space.'
         }
       }

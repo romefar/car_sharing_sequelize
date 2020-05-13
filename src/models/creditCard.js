@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Empty card holder name is not allowed.'
         },
         is: {
-          args: [/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/g],
+          args: [/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/],
           msg: 'Card holder name can only contain the following characters: a-z, A-Z, \', hyphen and space.'
         }
       }
