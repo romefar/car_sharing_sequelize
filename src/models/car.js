@@ -1,3 +1,11 @@
+const {
+  CAR_UNAVAILABLE,
+  CAR_IN_USE,
+  CAR_IN_SERVICE,
+  CAR_RESERVED,
+  CAR_FREE
+} = require('../utils/carStatus')
+
 module.exports = (sequelize, DataTypes) => {
   const Car = sequelize.define('car', {
     vin: {
@@ -70,8 +78,8 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     status: {
-      type: DataTypes.ENUM('Free', 'In use', 'Unavailable', 'In service', 'Reserved'),
-      defaultValue: 'Free'
+      type: DataTypes.ENUM(CAR_UNAVAILABLE, CAR_IN_USE, CAR_IN_SERVICE, CAR_RESERVED, CAR_FREE),
+      defaultValue: CAR_FREE
     },
     fuelCapacity: {
       type: DataTypes.INTEGER,
