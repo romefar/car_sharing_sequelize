@@ -30,7 +30,9 @@ db.sync({ force: true }).then(async () => {
     }
   })
 
-  server.listen(process.env.PORT, () => {
-    console.log(chalk.green(`Server is running on port ${process.env.PORT}.`))
+  const port = process.env.PORT || 3000
+
+  server.listen(port, () => {
+    console.log(chalk.green(`Server is running on port ${port}.`))
   })
 }).catch(err => console.log(err))
