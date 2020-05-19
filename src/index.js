@@ -2,9 +2,9 @@ const http = require('http')
 const chalk = require('chalk')
 require('dotenv/config')
 
-const responseUtil = require('./src/utils/resposeUtil')
-const { carsRoute, driversRoute, bookingRoute } = require('./src/routes')
-const { car, creditCard, driver, run, booking, sequelize: db } = require('./src/models')
+const responseUtil = require('./utils/resposeUtil')
+const { carsRoute, driversRoute, bookingRoute } = require('./routes')
+const { car, creditCard, driver, run, booking, sequelize: db } = require('./models')
 const createTestData = require('./bulkFile')
 
 db.sync({ force: true }).then(async () => {
