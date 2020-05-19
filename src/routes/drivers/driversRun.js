@@ -1,6 +1,7 @@
 const { booking, run, car } = require('../../models')
 const { Op } = require('sequelize')
 const responseUtil = require('../../utils/resposeUtil')
+const { BOOKING_CLOSED, BOOKING_CANCELLED } = require('../../utils/bookingsStatus')
 
 const driversRun = async (req, res) => {
   let data = ''
@@ -17,7 +18,7 @@ const driversRun = async (req, res) => {
       const runs = await booking.findAll({
         where: {
           status: {
-            [Op.in]: ['Closed', 'Cancelled']
+            [Op.in]: [BOOKING_CLOSED, BOOKING_CANCELLED]
           }
         },
         attributes: [],

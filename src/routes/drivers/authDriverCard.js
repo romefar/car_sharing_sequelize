@@ -13,14 +13,14 @@ const authDriverCard = async (req, res) => {
   req.on('end', async () => {
     try {
       const { creditCardId } = JSON.parse(data)
-      const card = await creditCard.findOne({ where: { id: creditCard } })
-      if (card !== null && card.cardValidDate <= new Date().toJSON().slice(0, 10)) {
+      const card = await creditCard.findOne({ where: { id: creditCardId } })
+      if (card !== null && card.cardValidDate >= new Date().toJSON().slice(0, 10)) {
         const card = await creditCard.update({ isAuthorized: true }, { where: { id: creditCardId } })
         if (card[0] !== 0) {
           responseUtil(res, 200, 'The card now is authorized.')
         }
       } else {
-        responseUtil(res, 404, 'The card was not found or card was expired.', true)
+        responseUtil(res, 404, 'The card was not found or card is expired.', true)
       }
     } catch (error) {
       const msg = error.errors ? error.errors[0].message : error.message
