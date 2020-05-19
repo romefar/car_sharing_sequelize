@@ -1,14 +1,19 @@
 const { Op } = require('sequelize')
 const { car } = require('../../models')
 const responseUtil = require('../../utils/resposeUtil')
+const {
+  CAR_IN_USE,
+  CAR_IN_SERVICE,
+  CAR_RESERVED
+} = require('../../utils/carStatus')
 
 const carsService = async (res) => {
   try {
     const serviceDate = `${new Date().getFullYear() - 3}-01-01`
-    const cars = await car.update({ status: 'In service' }, {
+    const cars = await car.update({ status: CAR_IN_SERVICE }, {
       where: {
         status: {
-          [Op.notIn]: ['In use', 'Reserved']
+          [Op.notIn]: [CAR_IN_USE, CAR_RESERVED]
         },
         [Op.or]: [
           {
@@ -28,7 +33,7 @@ const carsService = async (res) => {
     if (cars[0] !== 0) {
       const updatedCars = await car.findAll({
         where: {
-          status: 'In service',
+          status: CAR_IN_SERVICE,
           [Op.or]: [
             {
               productionDate: {

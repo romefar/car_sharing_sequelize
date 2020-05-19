@@ -1,11 +1,12 @@
 const { car, creditCard, driver, run, booking } = require('../../models')
 const responseUtil = require('../../utils/resposeUtil')
+const { BOOKING_BOOKED } = require('../../utils/bookingsStatus')
 
 const cardReservedList = async (res) => {
   try {
     const data = await booking.findAll({
       where: {
-        status: 'Booked'
+        status: BOOKING_BOOKED
       },
       attributes: [],
       include: [{

@@ -2,6 +2,14 @@ const { car } = require('../../models')
 const { Op } = require('sequelize')
 const responseUtil = require('../../utils/resposeUtil')
 
+const {
+  CAR_UNAVAILABLE,
+  CAR_IN_USE,
+  CAR_IN_SERVICE,
+  CAR_RESERVED,
+  CAR_FREE
+} = require('../../utils/carStatus')
+
 const carsList = async (res, searchParams) => {
   let requestError = true
   try {
@@ -21,7 +29,7 @@ const carsList = async (res, searchParams) => {
 }
 
 const capLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1)
-const checkStatus = (str) => ['Free', 'In use', 'Unavailable', 'In service', 'Reserved'].includes(str)
+const checkStatus = (str) => [CAR_UNAVAILABLE, CAR_IN_USE, CAR_IN_SERVICE, CAR_RESERVED, CAR_FREE].includes(str)
 const checkAvailableFields = (str) => ['status', 'fuelLevel', 'brand', 'model', 'mileage', 'used'].includes(str)
 const validateFields = (key, value, options) => {
   const isAvailableField = checkAvailableFields(key)

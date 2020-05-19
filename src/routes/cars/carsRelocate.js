@@ -2,6 +2,11 @@ const { Op } = require('sequelize')
 const { car } = require('../../models')
 const responseUtil = require('../../utils/resposeUtil')
 
+const {
+  CAR_IN_USE,
+  CAR_RESERVED
+} = require('../../utils/carStatus')
+
 const carsRelocate = async (res) => {
   try {
     const cars = await car.update({
@@ -11,7 +16,7 @@ const carsRelocate = async (res) => {
     {
       where: {
         status: {
-          [Op.notIn]: ['In use', 'Reserved']
+          [Op.notIn]: [CAR_IN_USE, CAR_RESERVED]
         },
         useCounter: {
           [Op.gte]: 2
@@ -23,7 +28,7 @@ const carsRelocate = async (res) => {
       const updatedCars = await car.findAll({
         where: {
           status: {
-            [Op.notIn]: ['In use', 'Reserved']
+            [Op.notIn]: [CAR_IN_USE, CAR_RESERVED]
           },
           useCounter: {
             [Op.gte]: 2
