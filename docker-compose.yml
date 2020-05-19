@@ -1,0 +1,26 @@
+version: "3.5"
+services: 
+    car-sharing-api:
+        build: .
+        container_name: car-sharing-api
+        working_dir: /app
+        environment:
+            - DB_USERNAME=${DB_DOCKER_USERNAME}
+            - DB_PASSWORD=${DB_DOCKER_PASSWORD}
+            - DB_NAME=${DB_DOCKER_NAME}
+            - DB_HOSTNAME=${DB_DOCKER_HOST}
+        ports: 
+            - 5001:3000
+        depends_on: 
+            - db
+    db:
+        image: mysql:5.6
+        restart: always
+        container_name: mysql-db
+        ports: 
+            - 3306:3306
+        environment:
+            - MYSQL_USER=${DB_DOCKER_USERNAME}
+            - MYSQL_PASSWORD=${DB_DOCKER_PASSWORD}
+            - MYSQL_DATABASE=${DB_DOCKER_NAME}
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
