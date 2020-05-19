@@ -1,5 +1,6 @@
 const { booking } = require('../../models')
 const responseUtil = require('../../utils/resposeUtil')
+const { BOOKING_CLOSED } = require('../../utils/bookingsStatus')
 
 const bookingStatusUpdate = async (req, res) => {
   let data = ''
@@ -16,7 +17,7 @@ const bookingStatusUpdate = async (req, res) => {
       const bookingItem = await booking.findByPk(bookingId)
       if (bookingItem !== null) {
         bookingItem.status = status
-        if (finishFuelLevel && finishMileage && status === 'Closed') {
+        if (finishFuelLevel && finishMileage && status === BOOKING_CLOSED) {
           bookingItem.finishFuelLevel = finishFuelLevel
           bookingItem.finishMileage = finishMileage
         }
