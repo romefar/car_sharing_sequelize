@@ -3,7 +3,7 @@ const responseUtil = require('../../utils/resposeUtil')
 
 const bookingList = async (res) => {
   try {
-    const data = await booking.findAll({
+    const bookings = await booking.findAll({
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       include: [{
         model: car,
@@ -19,8 +19,8 @@ const bookingList = async (res) => {
       }]
     })
 
-    if (data.length !== 0) {
-      const bookingData = JSON.parse(JSON.stringify(data))
+    if (bookings.length > 0) {
+      const bookingData = JSON.parse(JSON.stringify(bookings))
       responseUtil(res, 200, bookingData)
     } else {
       responseUtil(res, 200, [])
